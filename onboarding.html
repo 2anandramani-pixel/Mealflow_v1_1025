@@ -338,21 +338,64 @@
                     </div>
                     
                     <div class="form-group">
+                        <label>Protein Preferences (select all that apply)</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" class="protein-pref" value="chicken" data-member="${member.id}"> 🍗 Chicken</label>
+                            <label><input type="checkbox" class="protein-pref" value="fish" data-member="${member.id}"> 🐟 Fish</label>
+                            <label><input type="checkbox" class="protein-pref" value="beef" data-member="${member.id}"> 🥩 Beef</label>
+                            <label><input type="checkbox" class="protein-pref" value="pork" data-member="${member.id}"> 🥓 Pork</label>
+                            <label><input type="checkbox" class="protein-pref" value="lamb" data-member="${member.id}"> 🍖 Lamb</label>
+                            <label><input type="checkbox" class="protein-pref" value="tofu" data-member="${member.id}"> 🥡 Tofu</label>
+                            <label><input type="checkbox" class="protein-pref" value="beans" data-member="${member.id}"> 🫘 Beans/Legumes</label>
+                            <label><input type="checkbox" class="protein-pref" value="eggs" data-member="${member.id}"> 🥚 Eggs</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Protein Exclusions (will NOT eat)</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" class="protein-exclude" value="chicken" data-member="${member.id}"> Chicken</label>
+                            <label><input type="checkbox" class="protein-exclude" value="fish" data-member="${member.id}"> Fish/Seafood</label>
+                            <label><input type="checkbox" class="protein-exclude" value="beef" data-member="${member.id}"> Beef</label>
+                            <label><input type="checkbox" class="protein-exclude" value="pork" data-member="${member.id}"> Pork</label>
+                            <label><input type="checkbox" class="protein-exclude" value="lamb" data-member="${member.id}"> Lamb</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
                         <label>Allergens (comma-separated)</label>
-                        <input type="text" id="allergens_${member.id}" placeholder="e.g., peanuts, shellfish">
+                        <input type="text" id="allergens_${member.id}" placeholder="e.g., peanuts, shellfish, tree nuts">
                     </div>
                     
                     <div class="form-group">
                         <label>Cuisine Preferences</label>
                         <div class="checkbox-group">
-                            <label><input type="checkbox" value="American"> American</label>
-                            <label><input type="checkbox" value="Asian"> Asian</label>
-                            <label><input type="checkbox" value="Indian"> Indian</label>
-                            <label><input type="checkbox" value="Italian"> Italian</label>
-                            <label><input type="checkbox" value="Mexican"> Mexican</label>
-                            <label><input type="checkbox" value="Mediterranean"> Mediterranean</label>
+                            <label><input type="checkbox" class="cuisine-pref" value="American" data-member="${member.id}"> American</label>
+                            <label><input type="checkbox" class="cuisine-pref" value="Asian" data-member="${member.id}"> Asian</label>
+                            <label><input type="checkbox" class="cuisine-pref" value="Indian" data-member="${member.id}"> Indian</label>
+                            <label><input type="checkbox" class="cuisine-pref" value="Italian" data-member="${member.id}"> Italian</label>
+                            <label><input type="checkbox" class="cuisine-pref" value="Mexican" data-member="${member.id}"> Mexican</label>
+                            <label><input type="checkbox" class="cuisine-pref" value="Mediterranean" data-member="${member.id}"> Mediterranean</label>
+                            <label><input type="checkbox" class="cuisine-pref" value="Middle Eastern" data-member="${member.id}"> Middle Eastern</label>
                         </div>
                     </div>
+                    
+                    <div class="form-group">
+                        <label>Spice Level</label>
+                        <select id="spice_${member.id}" class="spice-level">
+                            <option value="mild">😊 Mild (Kid-friendly)</option>
+                            <option value="medium" selected>🌶️ Medium</option>
+                            <option value="spicy">🔥 Spicy</option>
+                        </select>
+                    </div>
+                    
+                    ${member.isChild ? `
+                    <div class="form-group kid-section">
+                        <label>🎈 Ingredient Dislikes (for kids)</label>
+                        <input type="text" id="dislikes_${member.id}" placeholder="e.g., mushrooms, broccoli, onions" class="kid-input">
+                        <small>These ingredients will be avoided in meal planning</small>
+                    </div>
+                    ` : ''}
                 </div>
             `).join('');
         }
@@ -389,14 +432,30 @@
                 
                 member.dietaryPreferences = dietaryPreferences;
                 
+                // Protein preferences
+                const proteinPrefCheckboxes = document.querySelectorAll(`.protein-pref[data-member="${member.id}"]:checked`);
+                member.proteinPreferences = Array.from(proteinPrefCheckboxes).map(cb => cb.value);
+                
+                // Protein exclusions
+                const proteinExcludeCheckboxes = document.querySelectorAll(`.protein-exclude[data-member="${member.id}"]:checked`);
+                member.proteinExclusions = Array.from(proteinExcludeCheckboxes).map(cb => cb.value);
+                
+                // Allergens
                 const allergensInput = document.getElementById(`allergens_${member.id}`)?.value;
                 member.allergens = allergensInput ? allergensInput.split(',').map(a => a.trim()) : [];
                 
                 // Cuisine preferences
-                const cuisineCheckboxes = document.querySelectorAll(`#memberPreferencesContainer .member-preferences-card:nth-child(${tempFamilyMembers.indexOf(member) + 1}) input[type="checkbox"][value]`);
-                member.cuisinePreferences = Array.from(cuisineCheckboxes)
-                    .filter(cb => cb.checked)
-                    .map(cb => cb.value);
+                const cuisineCheckboxes = document.querySelectorAll(`.cuisine-pref[data-member="${member.id}"]:checked`);
+                member.cuisinePreferences = Array.from(cuisineCheckboxes).map(cb => cb.value);
+                
+                // Spice level
+                member.spiceLevel = document.getElementById(`spice_${member.id}`)?.value || 'medium';
+                
+                // Kid dislikes
+                if (member.isChild) {
+                    const dislikesInput = document.getElementById(`dislikes_${member.id}`)?.value;
+                    member.kidDislikes = dislikesInput ? dislikesInput.split(',').map(d => d.trim()) : [];
+                }
             });
             
             // Render summary

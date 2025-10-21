@@ -75,7 +75,10 @@ class MealPlanner {
             vegan: false,
             glutenFree: false,
             dairyFree: false,
-            allergens: []
+            allergens: [],
+            proteinExclusions: [],
+            kidDislikes: [],
+            spiceLevels: []
         };
 
         familyMembers.forEach(member => {
@@ -97,7 +100,27 @@ class MealPlanner {
             if (member.allergens && member.allergens.length > 0) {
                 restrictions.allergens.push(...member.allergens);
             }
+            
+            // Protein exclusions
+            if (member.proteinExclusions && member.proteinExclusions.length > 0) {
+                restrictions.proteinExclusions.push(...member.proteinExclusions);
+            }
+            
+            // Kid dislikes
+            if (member.kidDislikes && member.kidDislikes.length > 0) {
+                restrictions.kidDislikes.push(...member.kidDislikes);
+            }
+            
+            // Track spice levels (use most restrictive)
+            if (member.spiceLevel) {
+                restrictions.spiceLevels.push(member.spiceLevel);
+            }
         });
+        
+        // Remove duplicates
+        restrictions.allergens = [...new Set(restrictions.allergens)];
+        restrictions.proteinExclusions = [...new Set(restrictions.proteinExclusions)];
+        restrictions.kidDislikes = [...new Set(restrictions.kidDislikes)];
 
         return restrictions;
     }
@@ -120,13 +143,36 @@ class MealPlanner {
                 return false;
             }
             
-            // Check for allergens (simplified - would need more detailed ingredient checking)
+            // Check for allergens
             if (restrictions.allergens.length > 0) {
                 const recipeIngredients = recipe.ingredients.map(i => i.name.toLowerCase());
                 const hasAllergen = restrictions.allergens.some(allergen => 
                     recipeIngredients.some(ing => ing.includes(allergen.toLowerCase()))
                 );
                 if (hasAllergen) return false;
+            }
+            
+            // Check protein exclusions
+            if (restrictions.proteinExclusions.length > 0) {
+                const recipeIngredients = recipe.ingredients.map(i => i.name.toLowerCase());
+                const hasExcludedProtein = restrictions.proteinExclusions.some(protein => 
+                    recipeIngredients.some(ing => ing.includes(protein.toLowerCase()))
+                );
+                if (hasExcludedProtein) return false;
+            }
+            
+            // Check kid dislikes
+            if (restrictions.kidDislikes.length > 0) {
+                const recipeIngredients = recipe.ingredients.map(i => i.name.toLowerCase());
+                const hasDislikedIngredient = restrictions.kidDislikes.some(dislike => 
+                    recipeIngredients.some(ing => ing.includes(dislike.toLowerCase()))
+                );
+                if (hasDislikedIngredient) return false;
+            }
+            
+            // Check spice level (use most restrictive)
+            if (restrictions.spiceLevels.includes('mild') && recipe.tags && recipe.tags.includes('spicy')) {
+                return false;
             }
             
             return true;
@@ -173,10 +219,23 @@ class MealPlanner {
                 score += 10;
             }
             
+            // Protein preference matching
+            if (member.proteinPreferences && member.proteinPreferences.length > 0) {
+                const recipeIngredients = recipe.ingredients.map(i => i.name.toLowerCase());
+                const hasPreferredProtein = member.proteinPreferences.some(protein => 
+                    recipeIngredients.some(ing => ing.includes(protein.toLowerCase()))
+                );
+                if (hasPreferredProtein) {
+                    score += 15;
+                }
+            }
+            
             // Kid-friendly bonus
             if (member.age && member.age < 13 && recipe.tags.includes('kid-friendly')) {
                 score += 15;
             }
+            
+            // Kid dislikes penalty already handled in filtering
             
             // High protein preference
             if (member.macroSplit === 'highProtein' && recipe.tags.includes('high-protein')) {
@@ -186,6 +245,11 @@ class MealPlanner {
             // Low carb preference
             if (member.macroSplit === 'lowCarb' && recipe.tags.includes('low-carb')) {
                 score += 10;
+            }
+            
+            // Spice level match
+            if (member.spiceLevel === 'mild' && recipe.tags && !recipe.tags.includes('spicy')) {
+                score += 5;
             }
         });
         

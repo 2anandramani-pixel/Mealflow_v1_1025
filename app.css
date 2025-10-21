@@ -116,6 +116,29 @@
     cursor: pointer;
 }
 
+.kid-section {
+    background: #f0f9ff;
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid #3b82f6;
+}
+
+.kid-section label {
+    color: #1e40af;
+    font-weight: 600;
+}
+
+.kid-input {
+    border-color: #3b82f6 !important;
+}
+
+.kid-section small {
+    display: block;
+    color: #64748b;
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
 .button-group {
     display: flex;
     gap: 15px;
