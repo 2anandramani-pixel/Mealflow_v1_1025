@@ -138,6 +138,32 @@ class StorageManager {
         };
     }
 
+    // Family Profile Templates (for testing)
+    saveFamilyProfile(profileName, household, members) {
+        const profiles = this.load('mealflow_family_profiles') || {};
+        profiles[profileName] = {
+            household,
+            members,
+            savedAt: new Date().toISOString()
+        };
+        return this.save('mealflow_family_profiles', profiles);
+    }
+
+    getFamilyProfiles() {
+        return this.load('mealflow_family_profiles') || {};
+    }
+
+    loadFamilyProfile(profileName) {
+        const profiles = this.getFamilyProfiles();
+        return profiles[profileName] || null;
+    }
+
+    deleteFamilyProfile(profileName) {
+        const profiles = this.getFamilyProfiles();
+        delete profiles[profileName];
+        return this.save('mealflow_family_profiles', profiles);
+    }
+
     // Utility methods
     generateId() {
         return Date.now().toString(36) + Math.random().toString(36).substr(2);

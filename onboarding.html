@@ -27,6 +27,16 @@
                 <h1>Welcome to MealFlow!</h1>
                 <p class="step-description">Let's set up your household meal planning</p>
                 
+                <div class="load-profile-section" id="loadProfileSection">
+                    <h3>📂 Load Saved Profile</h3>
+                    <p>Quickly load a previously saved family configuration</p>
+                    <div id="availableProfiles"></div>
+                </div>
+                
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+                
                 <div class="form-group">
                     <label for="householdName">Household Name</label>
                     <input type="text" id="householdName" placeholder="e.g., The Smith Family" required>
@@ -116,6 +126,16 @@
                 <p class="step-description">Here's your family meal plan summary</p>
                 
                 <div id="summaryContainer"></div>
+                
+                <div class="save-profile-section">
+                    <h3>💾 Save This Family Profile</h3>
+                    <p>Save this configuration for quick testing or switching between families</p>
+                    <div class="form-row">
+                        <input type="text" id="profileName" placeholder="e.g., Test Family 1" style="flex: 1;">
+                        <button class="btn btn-secondary" onclick="saveCurrentProfile()">Save Profile</button>
+                    </div>
+                    <div id="savedProfiles"></div>
+                </div>
                 
                 <div class="button-group">
                     <button class="btn btn-outline" onclick="prevStep(5)">Back</button>
@@ -210,6 +230,7 @@
                 loadPreferencesStep();
             } else if (stepNumber === 5) {
                 loadSummaryStep();
+                loadSavedProfilesList();
             }
         }
 
@@ -505,6 +526,94 @@
             `;
         }
 
+        // Save current profile
+        function saveCurrentProfile() {
+            const profileName = document.getElementById('profileName').value.trim();
+            
+            if (!profileName) {
+                alert('Please enter a profile name');
+                return;
+            }
+            
+            const household = storage.getHousehold();
+            storage.saveFamilyProfile(profileName, household, tempFamilyMembers);
+            
+            alert(`Profile "${profileName}" saved successfully!`);
+            document.getElementById('profileName').value = '';
+            loadSavedProfilesList();
+        }
+
+        // Load saved profiles list
+        function loadSavedProfilesList() {
+            const profiles = storage.getFamilyProfiles();
+            const container = document.getElementById('savedProfiles');
+            
+            if (Object.keys(profiles).length === 0) {
+                container.innerHTML = '<p class="empty-state" style="font-size: 0.9rem;">No saved profiles yet</p>';
+                return;
+            }
+            
+            container.innerHTML = '<h4>Saved Profiles:</h4>' + Object.entries(profiles).map(([name, profile]) => `
+                <div class="saved-profile-item">
+                    <span>${name}</span>
+                    <small>${profile.members.length} members • Saved ${new Date(profile.savedAt).toLocaleDateString()}</small>
+                    <button class="btn btn-sm btn-danger" onclick="deleteProfile('${name}')">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        // Delete profile
+        function deleteProfile(profileName) {
+            if (confirm(`Delete profile "${profileName}"?`)) {
+                storage.deleteFamilyProfile(profileName);
+                loadSavedProfilesList();
+                loadAvailableProfiles();
+            }
+        }
+
+        // Load available profiles on step 1
+        function loadAvailableProfiles() {
+            const profiles = storage.getFamilyProfiles();
+            const container = document.getElementById('availableProfiles');
+            
+            if (Object.keys(profiles).length === 0) {
+                document.getElementById('loadProfileSection').style.display = 'none';
+                return;
+            }
+            
+            document.getElementById('loadProfileSection').style.display = 'block';
+            container.innerHTML = Object.entries(profiles).map(([name, profile]) => `
+                <button class="profile-load-btn" onclick="loadProfile('${name}')">
+                    <span class="profile-name">${name}</span>
+                    <span class="profile-info">${profile.members.length} members</span>
+                </button>
+            `).join('');
+        }
+
+        // Load a saved profile
+        function loadProfile(profileName) {
+            const profile = storage.loadFamilyProfile(profileName);
+            
+            if (!profile) {
+                alert('Profile not found');
+                return;
+            }
+            
+            // Load household data
+            storage.saveHousehold(profile.household);
+            document.getElementById('householdName').value = profile.household.name;
+            
+            // Load family members
+            tempFamilyMembers = profile.members;
+            
+            // Skip to summary
+            currentStepNumber = 5;
+            showStep(5);
+            loadSummaryStep();
+            
+            alert(`Loaded profile "${profileName}"!`);
+        }
+
         // Finish onboarding
         function finishOnboarding() {
             // Save all family members
@@ -516,6 +625,7 @@
 
         // Initialize
         updateProgress();
+        loadAvailableProfiles();
     </script>
 </body>
 </html>
