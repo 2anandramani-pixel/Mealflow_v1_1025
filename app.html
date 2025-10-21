@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MealFlow - Your Meal Planner</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="app.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="icon" href="icons/icon-192.svg">
+</head>
+<body class="app-body">
+    <!-- App Navigation -->
+    <nav class="app-nav">
+        <div class="app-nav-container">
+            <div class="app-logo">
+                <h2>MealFlow</h2>
+            </div>
+            <div class="app-nav-menu">
+                <a href="#dashboard" class="app-nav-link active" data-view="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="#family" class="app-nav-link" data-view="family">
+                    <span class="nav-icon">👨‍👩‍👧‍👦</span>
+                    <span class="nav-label">Family</span>
+                </a>
+                <a href="#meals" class="app-nav-link" data-view="meals">
+                    <span class="nav-icon">🍽️</span>
+                    <span class="nav-label">Meals</span>
+                </a>
+                <a href="#shopping" class="app-nav-link" data-view="shopping">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-label">Shopping</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main App Container -->
+    <main class="app-main">
+        <!-- Dashboard View -->
+        <div class="app-view active" id="dashboardView">
+            <div class="view-header">
+                <h1>Dashboard</h1>
+                <p class="view-subtitle" id="todayDate"></p>
+            </div>
+
+            <div class="dashboard-cards">
+                <div class="dashboard-card">
+                    <h3>Meal Plan Status</h3>
+                    <div id="mealPlanStatus">
+                        <p class="empty-state">No meal plan yet</p>
+                        <button class="btn btn-primary" onclick="generateMealPlan()">Generate Weekly Plan</button>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>Today's Meals</h3>
+                    <div id="todayMeals"></div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>Family Members</h3>
+                    <div id="familySummary"></div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <h2>Quick Actions</h2>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="generateMealPlan()">
+                        <span class="action-icon">🍽️</span>
+                        <span>Generate Meal Plan</span>
+                    </button>
+                    <button class="action-btn" onclick="viewMeals()">
+                        <span class="action-icon">📅</span>
+                        <span>View Weekly Plan</span>
+                    </button>
+                    <button class="action-btn" onclick="viewShopping()">
+                        <span class="action-icon">🛒</span>
+                        <span>Shopping List</span>
+                    </button>
+                    <button class="action-btn" onclick="viewFamily()">
+                        <span class="action-icon">👤</span>
+                        <span>Manage Family</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Family View -->
+        <div class="app-view" id="familyView">
+            <div class="view-header">
+                <h1>Family Members</h1>
+                <button class="btn btn-primary" onclick="showAddMemberModal()">+ Add Member</button>
+            </div>
+
+            <div id="familyMembersList"></div>
+        </div>
+
+        <!-- Meals View -->
+        <div class="app-view" id="mealsView">
+            <div class="view-header">
+                <h1>Weekly Meal Plan</h1>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" onclick="generateMealPlan()">Regenerate Plan</button>
+                </div>
+            </div>
+
+            <div id="weeklyMealPlan"></div>
+        </div>
+
+        <!-- Shopping View -->
+        <div class="app-view" id="shoppingView">
+            <div class="view-header">
+                <h1>Shopping List</h1>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" onclick="exportShoppingList()">Export List</button>
+                </div>
+            </div>
+
+            <div id="shoppingListContent"></div>
+        </div>
+    </main>
+
+    <!-- Add Member Modal -->
+    <div class="modal" id="addMemberModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Family Member</h2>
+                <button class="modal-close" onclick="closeAddMemberModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="newMemberName" placeholder="Name">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" id="newMemberAge" placeholder="Age">
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="newMemberGender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Weight (kg)</label>
+                        <input type="number" id="newMemberWeight" placeholder="70" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Height (cm)</label>
+                        <input type="number" id="newMemberHeight" placeholder="170">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Activity Level</label>
+                    <select id="newMemberActivity">
+                        <option value="sedentary">Sedentary</option>
+                        <option value="light">Light</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="active">Active</option>
+                        <option value="veryActive">Very Active</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Goal</label>
+                    <select id="newMemberGoal">
+                        <option value="weightLoss">Weight Loss</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="weightGain">Weight Gain</option>
+                        <option value="muscleGain">Muscle Gain</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeAddMemberModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveNewMember()">Add Member</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Meal Detail Modal -->
+    <div class="modal" id="mealDetailModal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2 id="mealDetailTitle"></h2>
+                <button class="modal-close" onclick="closeMealDetailModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="mealDetailBody"></div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeMealDetailModal()">Close</button>
+                <button class="btn btn-secondary" onclick="swapMeal()">Swap Meal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="storage.js"></script>
+    <script src="macros.js"></script>
+    <script src="recipes.js"></script>
+    <script src="meal-planner.js"></script>
+    <script src="shopping.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if onboarded
+            if (!storage.isOnboarded()) {
+                window.location.href = 'onboarding.html';
+                return;
+            }
+
+            // Initialize app
+            initApp();
+        });
+
+        function initApp() {
+            setupNavigation();
+            updateTodayDate();
+            loadDashboard();
+        }
+
+        // Setup navigation
+        function setupNavigation() {
+            document.querySelectorAll('.app-nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const view = this.dataset.view;
+                    showView(view);
+                });
+            });
+        }
+
+        // Show view
+        function showView(viewName) {
+            // Update active nav link
+            document.querySelectorAll('.app-nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`[data-view="${viewName}"]`).classList.add('active');
+
+            // Update active view
+            document.querySelectorAll('.app-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            document.getElementById(viewName + 'View').classList.add('active');
+
+            // Load view data
+            if (viewName === 'dashboard') loadDashboard();
+            else if (viewName === 'family') loadFamilyView();
+            else if (viewName === 'meals') loadMealsView();
+            else if (viewName === 'shopping') loadShoppingView();
+        }
+
+        // Update today's date
+        function updateTodayDate() {
+            const today = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('todayDate').textContent = today.toLocaleDateString('en-US', options);
+        }
+
+        // Load dashboard
+        function loadDashboard() {
+            const mealPlan = storage.getCurrentMealPlan();
+            const familyMembers = storage.getFamilyMembers();
+
+            // Meal plan status
+            if (mealPlan) {
+                document.getElementById('mealPlanStatus').innerHTML = `
+                    <div class="plan-info">
+                        <p class="plan-date">Created: ${new Date(mealPlan.createdAt).toLocaleDateString()}</p>
+                        <p class="plan-stats">7-day plan for ${familyMembers.length} family members</p>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="generateMealPlan()">Regenerate</button>
+                `;
+
+                // Today's meals
+                const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+                const todayMeals = mealPlan.plan[today];
+                
+                if (todayMeals) {
+                    document.getElementById('todayMeals').innerHTML = Object.entries(todayMeals).map(([mealType, meal]) => {
+                        if (!meal || !meal.recipe) return '';
+                        return `
+                            <div class="meal-card-sm" onclick="showMealDetail('${today}', '${mealType}')">
+                                <div class="meal-time">${mealType.charAt(0).toUpperCase() + mealType.slice(1)}</div>
+                                <div class="meal-name">${meal.recipe.name}</div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    document.getElementById('todayMeals').innerHTML = '<p class="empty-state">No meals planned for today</p>';
+                }
+            } else {
+                document.getElementById('todayMeals').innerHTML = '<p class="empty-state">Generate a meal plan to see today\'s meals</p>';
+            }
+
+            // Family summary
+            document.getElementById('familySummary').innerHTML = familyMembers.map(member => `
+                <div class="family-card-sm">
+                    <h4>${member.name}</h4>
+                    <p class="member-stats">${member.macros.calories} cal/day • ${member.macros.protein}g protein</p>
+                </div>
+            `).join('');
+        }
+
+        // Load family view
+        function loadFamilyView() {
+            const familyMembers = storage.getFamilyMembers();
+            
+            document.getElementById('familyMembersList').innerHTML = familyMembers.map(member => `
+                <div class="family-member-detail-card">
+                    <div class="member-header">
+                        <div>
+                            <h3>${member.name}</h3>
+                            <p class="member-meta">${member.age} years • ${member.gender}</p>
+                        </div>
+                        <button class="btn btn-sm btn-danger" onclick="deleteMember('${member.id}')">Delete</button>
+                    </div>
+                    <div class="member-macros-grid">
+                        <div class="macro-item">
+                            <span class="macro-label">Calories</span>
+                            <span class="macro-value">${member.macros.calories}</span>
+                        </div>
+                        <div class="macro-item">
+                            <span class="macro-label">Protein</span>
+                            <span class="macro-value">${member.macros.protein}g</span>
+                        </div>
+                        <div class="macro-item">
+                            <span class="macro-label">Carbs</span>
+                            <span class="macro-value">${member.macros.carbs}g</span>
+                        </div>
+                        <div class="macro-item">
+                            <span class="macro-label">Fat</span>
+                            <span class="macro-value">${member.macros.fat}g</span>
+                        </div>
+                    </div>
+                    ${member.dietaryPreferences && member.dietaryPreferences.length > 0 ? `
+                        <div class="member-tags">
+                            ${member.dietaryPreferences.map(p => `<span class="tag">${p}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Load meals view
+        function loadMealsView() {
+            const mealPlan = storage.getCurrentMealPlan();
+            
+            if (!mealPlan) {
+                document.getElementById('weeklyMealPlan').innerHTML = `
+                    <div class="empty-state-lg">
+                        <p>No meal plan generated yet</p>
+                        <button class="btn btn-primary btn-lg" onclick="generateMealPlan()">Generate Meal Plan</button>
+                    </div>
+                `;
+                return;
+            }
+
+            const days = Object.keys(mealPlan.plan);
+            document.getElementById('weeklyMealPlan').innerHTML = days.map(day => `
+                <div class="day-section">
+                    <h2 class="day-title">${day}</h2>
+                    <div class="meals-grid">
+                        ${Object.entries(mealPlan.plan[day]).map(([mealType, meal]) => {
+                            if (!meal || !meal.recipe) return '';
+                            const nutrition = recipeDB.calculateNutritionPerServing(meal.recipe);
+                            return `
+                                <div class="meal-card" onclick="showMealDetail('${day}', '${mealType}')">
+                                    <div class="meal-card-header">
+                                        <span class="meal-type">${mealType}</span>
+                                        <span class="meal-time-icon">${getMealIcon(mealType)}</span>
+                                    </div>
+                                    <img src="${meal.recipe.imageUrl}" alt="${meal.recipe.name}" class="meal-image">
+                                    <h3 class="meal-title">${meal.recipe.name}</h3>
+                                    <div class="meal-macros-sm">
+                                        <span>${nutrition.calories} cal</span>
+                                        <span>${nutrition.protein}g protein</span>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load shopping view
+        function loadShoppingView() {
+            const shoppingList = storage.getCurrentShoppingList();
+            
+            if (!shoppingList) {
+                document.getElementById('shoppingListContent').innerHTML = `
+                    <div class="empty-state-lg">
+                        <p>No shopping list available</p>
+                        <p>Generate a meal plan first to create a shopping list</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `
+                <div class="shopping-header">
+                    <div class="shopping-stats">
+                        <span class="stat-item"><strong>${shoppingList.itemCount}</strong> items</span>
+                        <span class="stat-item"><strong>$${shoppingList.totalCost}</strong> estimated</span>
+                    </div>
+                </div>
+            `;
+
+            Object.entries(shoppingList.items).forEach(([store, aisles]) => {
+                const storeName = shoppingListGenerator.STORE_CATEGORIES[store]?.name || store;
+                html += `
+                    <div class="store-section">
+                        <h2 class="store-title">${storeName}</h2>
+                        ${Object.entries(aisles).map(([aisle, items]) => `
+                            <div class="aisle-section">
+                                <h3 class="aisle-title">${aisle}</h3>
+                                <div class="shopping-items">
+                                    ${items.map(item => `
+                                        <label class="shopping-item ${shoppingList.checked && shoppingList.checked[item.id] ? 'checked' : ''}">
+                                            <input type="checkbox" 
+                                                   ${shoppingList.checked && shoppingList.checked[item.id] ? 'checked' : ''}
+                                                   onchange="toggleShoppingItem('${item.id}', this.checked)">
+                                            <div class="item-info">
+                                                <span class="item-name">${item.name}</span>
+                                                <span class="item-quantity">${item.quantity}</span>
+                                            </div>
+                                            <span class="item-cost">$${item.estimatedCost.toFixed(2)}</span>
+                                        </label>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            });
+
+            document.getElementById('shoppingListContent').innerHTML = html;
+        }
+
+        // Generate meal plan
+        function generateMealPlan() {
+            const familyMembers = storage.getFamilyMembers();
+            
+            if (familyMembers.length === 0) {
+                alert('Please add family members first');
+                return;
+            }
+
+            // Show loading
+            if (document.getElementById('weeklyMealPlan')) {
+                document.getElementById('weeklyMealPlan').innerHTML = '<div class="loading">Generating meal plan...</div>';
+            }
+
+            setTimeout(() => {
+                // Generate plan
+                const plan = mealPlanner.generateWeeklyPlan(familyMembers);
+                
+                // Save plan
+                storage.saveMealPlan({
+                    plan,
+                    familyMembers: familyMembers.map(m => m.id)
+                });
+
+                // Generate shopping list
+                const shoppingList = shoppingListGenerator.generateShoppingList(plan, familyMembers);
+                storage.saveShoppingList(shoppingList);
+
+                // Reload views
+                loadDashboard();
+                if (document.querySelector('#mealsView.active')) {
+                    loadMealsView();
+                }
+
+                alert('Meal plan generated successfully!');
+            }, 500);
+        }
+
+        // Show/hide modals
+        function showAddMemberModal() {
+            document.getElementById('addMemberModal').classList.add('active');
+        }
+
+        function closeAddMemberModal() {
+            document.getElementById('addMemberModal').classList.remove('active');
+        }
+
+        function closeMealDetailModal() {
+            document.getElementById('mealDetailModal').classList.remove('active');
+        }
+
+        // Save new member
+        function saveNewMember() {
+            const name = document.getElementById('newMemberName').value;
+            const age = parseInt(document.getElementById('newMemberAge').value);
+            const gender = document.getElementById('newMemberGender').value;
+            const weight = parseFloat(document.getElementById('newMemberWeight').value);
+            const height = parseFloat(document.getElementById('newMemberHeight').value);
+            const activityLevel = document.getElementById('newMemberActivity').value;
+            const goal = document.getElementById('newMemberGoal').value;
+
+            if (!name || !age || !weight || !height) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const member = {
+                name, age, gender, weight, height, activityLevel, goal,
+                macroSplit: 'balanced',
+                isChild: age < 13,
+                dietaryPreferences: [],
+                allergens: [],
+                cuisinePreferences: []
+            };
+
+            // Calculate macros
+            if (member.isChild) {
+                member.macros = macroCalculator.calculateChildMacros(age, weight, activityLevel);
+            } else {
+                member.macros = macroCalculator.calculateMemberMacros(member);
+            }
+
+            storage.addFamilyMember(member);
+            closeAddMemberModal();
+            loadFamilyView();
+        }
+
+        // Delete member
+        function deleteMember(id) {
+            if (confirm('Are you sure you want to delete this family member?')) {
+                storage.deleteFamilyMember(id);
+                loadFamilyView();
+                loadDashboard();
+            }
+        }
+
+        // Show meal detail
+        function showMealDetail(day, mealType) {
+            const mealPlan = storage.getCurrentMealPlan();
+            const meal = mealPlan.plan[day][mealType];
+            const familyMembers = storage.getFamilyMembers();
+
+            if (!meal) return;
+
+            document.getElementById('mealDetailTitle').textContent = meal.recipe.name;
+            
+            let html = `
+                <div class="meal-detail-content">
+                    <img src="${meal.recipe.imageUrl}" alt="${meal.recipe.name}" class="meal-detail-image">
+                    
+                    <div class="meal-info">
+                        <p><strong>Cuisine:</strong> ${meal.recipe.cuisine}</p>
+                        <p><strong>Prep Time:</strong> ${meal.recipe.prepTime} min</p>
+                        <p><strong>Cook Time:</strong> ${meal.recipe.cookTime} min</p>
+                        <p><strong>Difficulty:</strong> ${meal.recipe.difficulty}</p>
+                    </div>
+
+                    <h3>Family Portions</h3>
+                    <div class="portions-grid">
+                        ${Object.entries(meal.portions).map(([memberId, portion]) => {
+                            const member = familyMembers.find(m => m.id === memberId);
+                            return `
+                                <div class="portion-card">
+                                    <h4>${member.name}</h4>
+                                    <p>${portion.servings} servings</p>
+                                    <div class="portion-macros">
+                                        <span>${portion.calories} cal</span>
+                                        <span>${portion.protein}g protein</span>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <h3>Ingredients</h3>
+                    <ul class="ingredients-list">
+                        ${meal.recipe.ingredients.map(ing => `
+                            <li>${ing.quantity}${ing.unit} ${ing.name}</li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+
+            document.getElementById('mealDetailBody').innerHTML = html;
+            document.getElementById('mealDetailModal').classList.add('active');
+        }
+
+        // Helper functions
+        function getMealIcon(mealType) {
+            const icons = {
+                breakfast: '🌅',
+                lunch: '☀️',
+                dinner: '🌙',
+                snack: '🥤'
+            };
+            return icons[mealType] || '🍽️';
+        }
+
+        function toggleShoppingItem(itemId, checked) {
+            const shoppingList = storage.getCurrentShoppingList();
+            storage.updateShoppingListItem(shoppingList.id, itemId, checked);
+        }
+
+        function exportShoppingList() {
+            const shoppingList = storage.getCurrentShoppingList();
+            const text = shoppingListGenerator.exportAsText(shoppingList);
+            
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'mealflow-shopping-list.txt';
+            a.click();
+        }
+
+        function swapMeal() {
+            alert('Swap meal feature coming soon!');
+        }
+
+        function viewMeals() {
+            showView('meals');
+        }
+
+        function viewShopping() {
+            showView('shopping');
+        }
+
+        function viewFamily() {
+            showView('family');
+        }
+    </script>
+</body>
+</html>
+

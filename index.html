@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MealFlow - Plan Your Meals. Hit Your Goals. Simplify Your Life.</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="icon" href="icons/icon-192.svg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" href="icons/icon-192.svg">
+    
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>MealFlow</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#family" class="nav-link">Family Plans</a>
+                <a href="#progress" class="nav-link">Progress</a>
+                <button class="nav-cta" onclick="window.location.href='onboarding.html'">Get Started</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Plan Your Meals. Hit Your Goals. Simplify Your Life.</h1>
+                <p class="hero-description">
+                    MealFlow is your all-in-one solution for setting diet goals, calculating macros, 
+                    generating personalized meal plans, scheduling prep, and creating smart shopping lists. 
+                    Transform your nutrition journey with intelligent planning that adapts to your lifestyle.
+                </p>
+                <button class="cta-button primary" onclick="window.location.href='onboarding.html'">Get Started Free</button>
+                <div class="hero-stats">
+                    <span>10,000+ meals planned</span>
+                    <span>★★★★★ 4.9/5 rating</span>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <svg class="hero-mockup" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="300" height="400" rx="20" fill="#f8fafc"/>
+                    <rect x="20" y="30" width="260" height="40" rx="8" fill="#3b82f6"/>
+                    <text x="150" y="55" text-anchor="middle" fill="white" font-size="16" font-weight="bold">MealFlow Dashboard</text>
+                    <rect x="20" y="90" width="120" height="80" rx="8" fill="#10b981"/>
+                    <text x="80" y="115" text-anchor="middle" fill="white" font-size="12">Today's Plan</text>
+                    <text x="80" y="135" text-anchor="middle" fill="white" font-size="10">2,150 calories</text>
+                    <text x="80" y="150" text-anchor="middle" fill="white" font-size="10">45g protein</text>
+                    <rect x="150" y="90" width="130" height="80" rx="8" fill="#f59e0b"/>
+                    <text x="215" y="115" text-anchor="middle" fill="white" font-size="12">Shopping List</text>
+                    <text x="215" y="135" text-anchor="middle" fill="white" font-size="10">12 items</text>
+                    <text x="215" y="150" text-anchor="middle" fill="white" font-size="10">$45.20</text>
+                    <rect x="20" y="190" width="260" height="120" rx="8" fill="#6366f1"/>
+                    <text x="150" y="215" text-anchor="middle" fill="white" font-size="14" font-weight="bold">This Week's Meals</text>
+                    <rect x="30" y="230" width="240" height="15" rx="4" fill="white" opacity="0.3"/>
+                    <rect x="30" y="250" width="200" height="15" rx="4" fill="white" opacity="0.3"/>
+                    <rect x="30" y="270" width="220" height="15" rx="4" fill="white" opacity="0.3"/>
+                    <rect x="30" y="290" width="180" height="15" rx="4" fill="white" opacity="0.3"/>
+                    <rect x="20" y="330" width="260" height="50" rx="8" fill="#ef4444"/>
+                    <text x="150" y="355" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Start Planning Today</text>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <!-- Feature 1: Macros & Goals -->
+            <div class="feature-row">
+                <div class="feature-visual">
+                    <svg class="feature-mockup" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="300" height="200" rx="12" fill="#f1f5f9"/>
+                        <circle cx="80" cy="60" r="40" fill="#3b82f6" opacity="0.2"/>
+                        <circle cx="80" cy="60" r="30" fill="#3b82f6"/>
+                        <text x="80" y="65" text-anchor="middle" fill="white" font-size="12" font-weight="bold">45%</text>
+                        <text x="80" y="120" text-anchor="middle" fill="#64748b" font-size="10">Protein</text>
+                        <circle cx="150" cy="60" r="40" fill="#10b981" opacity="0.2"/>
+                        <circle cx="150" cy="60" r="30" fill="#10b981"/>
+                        <text x="150" y="65" text-anchor="middle" fill="white" font-size="12" font-weight="bold">35%</text>
+                        <text x="150" y="120" text-anchor="middle" fill="#64748b" font-size="10">Carbs</text>
+                        <circle cx="220" cy="60" r="40" fill="#f59e0b" opacity="0.2"/>
+                        <circle cx="220" cy="60" r="30" fill="#f59e0b"/>
+                        <text x="220" y="65" text-anchor="middle" fill="white" font-size="12" font-weight="bold">20%</text>
+                        <text x="220" y="120" text-anchor="middle" fill="#64748b" font-size="10">Fat</text>
+                        <rect x="20" y="140" width="260" height="40" rx="6" fill="#e2e8f0"/>
+                        <text x="150" y="165" text-anchor="middle" fill="#475569" font-size="12">Daily Goal: 2,150 calories</text>
+                    </svg>
+                </div>
+                <div class="feature-content">
+                    <h2 class="feature-title">Know Exactly What You Need</h2>
+                    <p class="feature-description">
+                        Get personalized macro and calorie tracking based on your unique goals, activity level, 
+                        and dietary preferences. Our intelligent system calculates exactly what your body needs 
+                        to achieve your health objectives, whether you're building muscle, losing weight, or 
+                        maintaining optimal wellness.
+                    </p>
+                    <ul class="feature-benefits">
+                        <li>✓ Personalized macro calculations</li>
+                        <li>✓ Goal-based calorie targets</li>
+                        <li>✓ Real-time progress tracking</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Feature 2: Meal Planning & Prep -->
+            <div class="feature-row reverse">
+                <div class="feature-visual">
+                    <svg class="feature-mockup" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="300" height="200" rx="12" fill="#f1f5f9"/>
+                        <rect x="20" y="20" width="60" height="40" rx="4" fill="#3b82f6"/>
+                        <text x="50" y="35" text-anchor="middle" fill="white" font-size="10">Mon</text>
+                        <text x="50" y="50" text-anchor="middle" fill="white" font-size="8">Breakfast</text>
+                        <rect x="90" y="20" width="60" height="40" rx="4" fill="#10b981"/>
+                        <text x="120" y="35" text-anchor="middle" fill="white" font-size="10">Tue</text>
+                        <text x="120" y="50" text-anchor="middle" fill="white" font-size="8">Lunch</text>
+                        <rect x="160" y="20" width="60" height="40" rx="4" fill="#f59e0b"/>
+                        <text x="190" y="35" text-anchor="middle" fill="white" font-size="10">Wed</text>
+                        <text x="190" y="50" text-anchor="middle" fill="white" font-size="8">Dinner</text>
+                        <rect x="230" y="20" width="50" height="40" rx="4" fill="#6366f1"/>
+                        <text x="255" y="35" text-anchor="middle" fill="white" font-size="10">Thu</text>
+                        <text x="255" y="50" text-anchor="middle" fill="white" font-size="8">Snack</text>
+                        <rect x="20" y="80" width="260" height="60" rx="6" fill="#e2e8f0"/>
+                        <text x="150" y="100" text-anchor="middle" fill="#475569" font-size="12" font-weight="bold">Weekly Meal Plan</text>
+                        <text x="150" y="115" text-anchor="middle" fill="#64748b" font-size="10">Auto-generated based on your preferences</text>
+                        <text x="150" y="130" text-anchor="middle" fill="#64748b" font-size="10">Flexible swaps available</text>
+                        <rect x="20" y="160" width="260" height="25" rx="4" fill="#ef4444"/>
+                        <text x="150" y="177" text-anchor="middle" fill="white" font-size="11">Prep Time: 2 hours (Sunday)</text>
+                    </svg>
+                </div>
+                <div class="feature-content">
+                    <h2 class="feature-title">Weekly Plans That Fit Your Lifestyle</h2>
+                    <p class="feature-description">
+                        Stop stressing about what to cook. Our AI generates complete weekly meal plans 
+                        tailored to your schedule, preferences, and cooking skills. Get flexible recipe 
+                        swaps, prep scheduling, and batch cooking strategies that save you hours every week.
+                    </p>
+                    <ul class="feature-benefits">
+                        <li>✓ Automated meal plan generation</li>
+                        <li>✓ Flexible recipe substitutions</li>
+                        <li>✓ Smart prep scheduling</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Feature 3: Family Plans -->
+            <div class="feature-row">
+                <div class="feature-visual">
+                    <svg class="feature-mockup" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="300" height="200" rx="12" fill="#f1f5f9"/>
+                        <circle cx="60" cy="50" r="20" fill="#3b82f6"/>
+                        <text x="60" y="55" text-anchor="middle" fill="white" font-size="10">D</text>
+                        <text x="60" y="80" text-anchor="middle" fill="#475569" font-size="9">Dad</text>
+                        <text x="60" y="95" text-anchor="middle" fill="#64748b" font-size="8">High Protein</text>
+                        <circle cx="150" cy="50" r="20" fill="#ec4899"/>
+                        <text x="150" y="55" text-anchor="middle" fill="white" font-size="10">M</text>
+                        <text x="150" y="80" text-anchor="middle" fill="#475569" font-size="9">Mom</text>
+                        <text x="150" y="95" text-anchor="middle" fill="#64748b" font-size="8">Low Carb</text>
+                        <circle cx="240" cy="50" r="20" fill="#10b981"/>
+                        <text x="240" y="55" text-anchor="middle" fill="white" font-size="10">K</text>
+                        <text x="240" y="80" text-anchor="middle" fill="#475569" font-size="9">Kids</text>
+                        <text x="240" y="95" text-anchor="middle" fill="#64748b" font-size="8">Balanced</text>
+                        <rect x="20" y="120" width="260" height="60" rx="6" fill="#e2e8f0"/>
+                        <text x="150" y="140" text-anchor="middle" fill="#475569" font-size="12" font-weight="bold">Shared Family Meal</text>
+                        <text x="150" y="155" text-anchor="middle" fill="#64748b" font-size="10">Stir-fry base + individual protein portions</text>
+                        <text x="150" y="170" text-anchor="middle" fill="#64748b" font-size="10">Smart portioning for each family member</text>
+                    </svg>
+                </div>
+                <div class="feature-content">
+                    <h2 class="feature-title">One Household. Multiple Needs</h2>
+                    <p class="feature-description">
+                        Managing different dietary needs shouldn't be complicated. MealFlow supports multiple 
+                        family members with unique goals - whether dad needs more protein, mom prefers lower carbs, 
+                        or the kids need balanced, appealing meals. Our system creates unified plans that satisfy 
+                        everyone while simplifying your cooking and shopping.
+                    </p>
+                    <ul class="feature-benefits">
+                        <li>✓ Individual family member profiles</li>
+                        <li>✓ Unified meal planning</li>
+                        <li>✓ Smart portion adjustments</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Feature 4: Smart Shopping Lists -->
+            <div class="feature-row reverse">
+                <div class="feature-visual">
+                    <svg class="feature-mockup" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="300" height="200" rx="12" fill="#f1f5f9"/>
+                        <rect x="20" y="20" width="80" height="30" rx="4" fill="#3b82f6"/>
+                        <text x="60" y="38" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Costco</text>
+                        <rect x="110" y="20" width="80" height="30" rx="4" fill="#10b981"/>
+                        <text x="150" y="38" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Safeway</text>
+                        <rect x="200" y="20" width="80" height="30" rx="4" fill="#f59e0b"/>
+                        <text x="240" y="38" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Asian Market</text>
+                        <rect x="20" y="70" width="260" height="15" rx="3" fill="#e2e8f0"/>
+                        <text x="30" y="80" fill="#475569" font-size="9">✓ Chicken breast (2 lbs)</text>
+                        <rect x="20" y="90" width="260" height="15" rx="3" fill="#e2e8f0"/>
+                        <text x="30" y="100" fill="#475569" font-size="9">✓ Brown rice (5 lbs)</text>
+                        <rect x="20" y="110" width="260" height="15" rx="3" fill="#e2e8f0"/>
+                        <text x="30" y="120" fill="#475569" font-size="9">✓ Mixed vegetables (3 bags)</text>
+                        <rect x="20" y="130" width="260" height="15" rx="3" fill="#e2e8f0"/>
+                        <text x="30" y="140" fill="#475569" font-size="9">✓ Olive oil (1 bottle)</text>
+                        <rect x="20" y="150" width="260" height="15" rx="3" fill="#e2e8f0"/>
+                        <text x="30" y="160" fill="#475569" font-size="9">✓ Greek yogurt (2 containers)</text>
+                        <rect x="20" y="170" width="260" height="20" rx="4" fill="#ef4444"/>
+                        <text x="150" y="183" text-anchor="middle" fill="white" font-size="11">Total: $45.20 • Organized by store & aisle</text>
+                    </svg>
+                </div>
+                <div class="feature-content">
+                    <h2 class="feature-title">Shop Smarter, Save Time</h2>
+                    <p class="feature-description">
+                        Never forget ingredients or waste time wandering store aisles again. Our smart shopping 
+                        lists are organized by store location (Costco, Safeway, Asian markets) and optimized 
+                        for efficient shopping paths. Get accurate quantities, price estimates, and even 
+                        suggestions for bulk purchases to maximize savings.
+                    </p>
+                    <ul class="feature-benefits">
+                        <li>✓ Store-organized shopping lists</li>
+                        <li>✓ Optimized shopping routes</li>
+                        <li>✓ Bulk purchase recommendations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Family & Household Section -->
+    <section id="family" class="family-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Perfect for Busy Families</h2>
+                <p class="section-subtitle">
+                    Manage everyone's unique dietary needs with one intelligent system
+                </p>
+            </div>
+            
+            <div class="family-features">
+                <div class="family-feature">
+                    <div class="family-icon">
+                        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="30" cy="30" r="25" fill="#3b82f6" opacity="0.1"/>
+                            <circle cx="30" cy="30" r="20" fill="#3b82f6"/>
+                            <text x="30" y="35" text-anchor="middle" fill="white" font-size="16" font-weight="bold">👤</text>
+                        </svg>
+                    </div>
+                    <h3>Member Profiles</h3>
+                    <p>Create lightweight profiles with name, age, preferences, allergens, and macro targets for each family member.</p>
+                </div>
+                
+                <div class="family-feature">
+                    <div class="family-icon">
+                        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="30" cy="30" r="25" fill="#10b981" opacity="0.1"/>
+                            <circle cx="30" cy="30" r="20" fill="#10b981"/>
+                            <text x="30" y="35" text-anchor="middle" fill="white" font-size="16" font-weight="bold">📅</text>
+                        </svg>
+                    </div>
+                    <h3>Unified Weekly Plan</h3>
+                    <p>Auto-generate shared family meal plans with smart portioning and individualized macro tweaks for each member.</p>
+                </div>
+                
+                <div class="family-feature">
+                    <div class="family-icon">
+                        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="30" cy="30" r="25" fill="#f59e0b" opacity="0.1"/>
+                            <circle cx="30" cy="30" r="20" fill="#f59e0b"/>
+                            <text x="30" y="35" text-anchor="middle" fill="white" font-size="16" font-weight="bold">⚖️</text>
+                        </svg>
+                    </div>
+                    <h3>Conflict Resolver</h3>
+                    <p>When preferences clash, we suggest parallel variants or modular recipes with protein add-ons for flexibility.</p>
+                </div>
+                
+                <div class="family-feature">
+                    <div class="family-icon">
+                        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="30" cy="30" r="25" fill="#6366f1" opacity="0.1"/>
+                            <circle cx="30" cy="30" r="20" fill="#6366f1"/>
+                            <text x="30" y="35" text-anchor="middle" fill="white" font-size="16" font-weight="bold">🛒</text>
+                        </svg>
+                    </div>
+                    <h3>Smart Shopping Merge</h3>
+                    <p>Aggregate ingredients across the family, auto-scale quantities, and organize by store with member labels.</p>
+                </div>
+                
+                <div class="family-feature">
+                    <div class="family-icon">
+                        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="30" cy="30" r="25" fill="#ec4899" opacity="0.1"/>
+                            <circle cx="30" cy="30" r="20" fill="#ec4899"/>
+                            <text x="30" y="35" text-anchor="middle" fill="white" font-size="16" font-weight="bold">👶</text>
+                        </svg>
+                    </div>
+                    <h3>Kid Mode</h3>
+                    <p>Emphasize variety, color, and texture rotation with lunchbox ideas, finger-foods, and low-mess options.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Progress & Feedback Section -->
+    <section id="progress" class="progress-section">
+        <div class="container">
+            <div class="progress-content">
+                <div class="progress-text">
+                    <h2 class="section-title">Adaptive Intelligence That Grows With You</h2>
+                    <p class="section-description">
+                        MealFlow learns from your weekly check-ins and syncs with Apple Health, Fitbit, and other 
+                        fitness trackers to dynamically adjust your goals. See real progress through intelligent 
+                        feedback loops that keep you motivated and on track.
+                    </p>
+                    <div class="progress-features">
+                        <div class="progress-feature">
+                            <span class="progress-icon">📊</span>
+                            <div>
+                                <h4>Weekly Check-ins</h4>
+                                <p>Quick assessments that refine your plan</p>
+                            </div>
+                        </div>
+                        <div class="progress-feature">
+                            <span class="progress-icon">⌚</span>
+                            <div>
+                                <h4>Health App Integration</h4>
+                                <p>Syncs with Apple Health, Fitbit, and more</p>
+                            </div>
+                        </div>
+                        <div class="progress-feature">
+                            <span class="progress-icon">🎯</span>
+                            <div>
+                                <h4>Dynamic Goal Adjustment</h4>
+                                <p>Automatically adapts based on your progress</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-visual">
+                    <svg class="progress-mockup" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="300" height="250" rx="15" fill="#f8fafc"/>
+                        <rect x="20" y="20" width="260" height="30" rx="6" fill="#3b82f6"/>
+                        <text x="150" y="40" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Progress Dashboard</text>
+                        <rect x="30" y="70" width="120" height="60" rx="6" fill="#10b981" opacity="0.1"/>
+                        <rect x="30" y="70" width="120" height="40" rx="6" fill="#10b981"/>
+                        <text x="90" y="95" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Weight Loss</text>
+                        <text x="90" y="125" text-anchor="middle" fill="#059669" font-size="10">-8 lbs this month</text>
+                        <rect x="170" y="70" width="110" height="60" rx="6" fill="#f59e0b" opacity="0.1"/>
+                        <rect x="170" y="70" width="110" height="40" rx="6" fill="#f59e0b"/>
+                        <text x="225" y="95" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Muscle Gain</text>
+                        <text x="225" y="125" text-anchor="middle" fill="#d97706" font-size="10">+2 lbs lean mass</text>
+                        <rect x="30" y="150" width="250" height="40" rx="6" fill="#e2e8f0"/>
+                        <text x="155" y="170" text-anchor="middle" fill="#475569" font-size="12" font-weight="bold">Weekly Goal Adjustment</text>
+                        <text x="155" y="185" text-anchor="middle" fill="#64748b" font-size="10">Based on Apple Health data</text>
+                        <rect x="30" y="210" width="250" height="25" rx="4" fill="#6366f1"/>
+                        <text x="155" y="227" text-anchor="middle" fill="white" font-size="11">Next check-in: Tomorrow</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="final-cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Take Control of Your Nutrition?</h2>
+                <p class="cta-description">
+                    Join thousands of families who've transformed their meal planning, hit their health goals, 
+                    saved money on groceries, and made meal prep stress-free. Start your journey to better 
+                    nutrition today.
+                </p>
+                <button class="cta-button primary large" onclick="window.location.href='onboarding.html'">Start Planning Today</button>
+                
+                <div class="trust-elements">
+                    <div class="ratings">
+                        <div class="stars">★★★★★</div>
+                        <span>4.9/5 from 2,500+ users</span>
+                    </div>
+                    <div class="testimonials">
+                        <div class="testimonial">
+                            <p>"MealFlow saved me 3 hours every week and helped me lose 15 pounds!"</p>
+                            <span>- Sarah M.</span>
+                        </div>
+                        <div class="testimonial">
+                            <p>"Finally, a solution that works for our whole family's different needs."</p>
+                            <span>- Mike R.</span>
+                        </div>
+                    </div>
+                    <div class="metrics">
+                        <div class="metric">
+                            <span class="metric-number">10,000+</span>
+                            <span class="metric-label">meals planned</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-number">$2.3M</span>
+                            <span class="metric-label">saved on groceries</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-number">50,000+</span>
+                            <span class="metric-label">happy families</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>MealFlow</h3>
+                    <p>Plan Your Meals. Hit Your Goals. Simplify Your Life.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="#">Features</a>
+                        <a href="#">Pricing</a>
+                        <a href="#">Family Plans</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Support</h4>
+                        <a href="#">Help Center</a>
+                        <a href="#">Contact Us</a>
+                        <a href="#">FAQ</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="#">About</a>
+                        <a href="#">Blog</a>
+                        <a href="#">Careers</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 MealFlow. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js');
+          });
+        }
+      </script>
+      
+</body>
+</html>
+
+
+
+
+
+
+
+
+

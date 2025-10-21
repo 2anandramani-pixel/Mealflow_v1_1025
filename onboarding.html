@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Started - MealFlow</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="app.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+</head>
+<body class="onboarding-body">
+    <div class="onboarding-container">
+        <!-- Progress Bar -->
+        <div class="onboarding-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                <span id="currentStep">1</span> of <span id="totalSteps">5</span>
+            </div>
+        </div>
+
+        <!-- Step 1: Household -->
+        <div class="onboarding-step active" id="step1">
+            <div class="step-content">
+                <h1>Welcome to MealFlow!</h1>
+                <p class="step-description">Let's set up your household meal planning</p>
+                
+                <div class="form-group">
+                    <label for="householdName">Household Name</label>
+                    <input type="text" id="householdName" placeholder="e.g., The Smith Family" required>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-primary btn-lg" onclick="nextStep(1)">Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Add Family Members -->
+        <div class="onboarding-step" id="step2">
+            <div class="step-content">
+                <h1>Add Family Members</h1>
+                <p class="step-description">Who are you planning meals for?</p>
+                
+                <div id="familyMembersList"></div>
+                
+                <div class="add-member-form" id="addMemberForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="memberName">Name</label>
+                            <input type="text" id="memberName" placeholder="Name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="memberAge">Age</label>
+                            <input type="number" id="memberAge" placeholder="Age" min="1" max="120" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="memberGender">Gender</label>
+                        <select id="memberGender" required>
+                            <option value="">Select gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-secondary" type="button" onclick="addFamilyMember()">+ Add Member</button>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-outline" onclick="prevStep(2)">Back</button>
+                    <button class="btn btn-primary btn-lg" onclick="nextStep(2)" id="continueStep2">Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Goals & Metrics -->
+        <div class="onboarding-step" id="step3">
+            <div class="step-content">
+                <h1>Set Goals & Metrics</h1>
+                <p class="step-description">Tell us about each family member's health goals</p>
+                
+                <div id="memberGoalsContainer"></div>
+                
+                <div class="button-group">
+                    <button class="btn btn-outline" onclick="prevStep(3)">Back</button>
+                    <button class="btn btn-primary btn-lg" onclick="nextStep(3)">Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Dietary Preferences -->
+        <div class="onboarding-step" id="step4">
+            <div class="step-content">
+                <h1>Dietary Preferences</h1>
+                <p class="step-description">Any dietary restrictions or preferences?</p>
+                
+                <div id="memberPreferencesContainer"></div>
+                
+                <div class="button-group">
+                    <button class="btn btn-outline" onclick="prevStep(4)">Back</button>
+                    <button class="btn btn-primary btn-lg" onclick="nextStep(4)">Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Summary -->
+        <div class="onboarding-step" id="step5">
+            <div class="step-content">
+                <h1>All Set!</h1>
+                <p class="step-description">Here's your family meal plan summary</p>
+                
+                <div id="summaryContainer"></div>
+                
+                <div class="button-group">
+                    <button class="btn btn-outline" onclick="prevStep(5)">Back</button>
+                    <button class="btn btn-primary btn-lg btn-finish" onclick="finishOnboarding()">Start Planning</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="storage.js"></script>
+    <script src="macros.js"></script>
+    <script>
+        let currentStepNumber = 1;
+        const totalSteps = 5;
+        let tempFamilyMembers = [];
+
+        // Update progress bar
+        function updateProgress() {
+            const progress = (currentStepNumber / totalSteps) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('currentStep').textContent = currentStepNumber;
+            document.getElementById('totalSteps').textContent = totalSteps;
+        }
+
+        // Show step
+        function showStep(stepNumber) {
+            document.querySelectorAll('.onboarding-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            document.getElementById('step' + stepNumber).classList.add('active');
+            currentStepNumber = stepNumber;
+            updateProgress();
+        }
+
+        // Next step
+        function nextStep(fromStep) {
+            if (!validateStep(fromStep)) {
+                return;
+            }
+            
+            saveStepData(fromStep);
+            
+            if (fromStep < totalSteps) {
+                showStep(fromStep + 1);
+                loadStepData(fromStep + 1);
+            }
+        }
+
+        // Previous step
+        function prevStep(fromStep) {
+            if (fromStep > 1) {
+                showStep(fromStep - 1);
+            }
+        }
+
+        // Validate step
+        function validateStep(stepNumber) {
+            if (stepNumber === 1) {
+                const householdName = document.getElementById('householdName').value.trim();
+                if (!householdName) {
+                    alert('Please enter a household name');
+                    return false;
+                }
+            }
+            
+            if (stepNumber === 2) {
+                if (tempFamilyMembers.length === 0) {
+                    alert('Please add at least one family member');
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        // Save step data
+        function saveStepData(stepNumber) {
+            if (stepNumber === 1) {
+                const household = {
+                    name: document.getElementById('householdName').value.trim(),
+                    createdAt: new Date().toISOString()
+                };
+                storage.saveHousehold(household);
+            }
+        }
+
+        // Load step data
+        function loadStepData(stepNumber) {
+            if (stepNumber === 3) {
+                loadGoalsStep();
+            } else if (stepNumber === 4) {
+                loadPreferencesStep();
+            } else if (stepNumber === 5) {
+                loadSummaryStep();
+            }
+        }
+
+        // Add family member
+        function addFamilyMember() {
+            const name = document.getElementById('memberName').value.trim();
+            const age = parseInt(document.getElementById('memberAge').value);
+            const gender = document.getElementById('memberGender').value;
+            
+            if (!name || !age || !gender) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            const member = {
+                id: Date.now().toString(36) + Math.random().toString(36).substr(2),
+                name,
+                age,
+                gender,
+                isChild: age < 13
+            };
+            
+            tempFamilyMembers.push(member);
+            renderFamilyMembersList();
+            
+            // Clear form
+            document.getElementById('memberName').value = '';
+            document.getElementById('memberAge').value = '';
+            document.getElementById('memberGender').value = '';
+        }
+
+        // Render family members list
+        function renderFamilyMembersList() {
+            const container = document.getElementById('familyMembersList');
+            
+            if (tempFamilyMembers.length === 0) {
+                container.innerHTML = '<p class="empty-state">No family members added yet</p>';
+                return;
+            }
+            
+            container.innerHTML = tempFamilyMembers.map(member => `
+                <div class="family-member-card">
+                    <div class="member-info">
+                        <h3>${member.name}</h3>
+                        <p>${member.age} years old • ${member.gender}</p>
+                    </div>
+                    <button class="btn btn-small btn-danger" onclick="removeFamilyMember('${member.id}')">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        // Remove family member
+        function removeFamilyMember(id) {
+            tempFamilyMembers = tempFamilyMembers.filter(m => m.id !== id);
+            renderFamilyMembersList();
+        }
+
+        // Load goals step
+        function loadGoalsStep() {
+            const container = document.getElementById('memberGoalsContainer');
+            container.innerHTML = tempFamilyMembers.map(member => `
+                <div class="member-goals-card">
+                    <h3>${member.name}</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Weight (kg)</label>
+                            <input type="number" id="weight_${member.id}" placeholder="Weight" step="0.1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Height (cm)</label>
+                            <input type="number" id="height_${member.id}" placeholder="Height" step="1" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Activity Level</label>
+                        <select id="activity_${member.id}">
+                            <option value="sedentary">Sedentary (little/no exercise)</option>
+                            <option value="light">Light (exercise 1-3 days/week)</option>
+                            <option value="moderate" selected>Moderate (exercise 3-5 days/week)</option>
+                            <option value="active">Active (exercise 6-7 days/week)</option>
+                            <option value="veryActive">Very Active (intense exercise daily)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Goal</label>
+                        <select id="goal_${member.id}">
+                            <option value="weightLoss">Weight Loss</option>
+                            <option value="maintenance" selected>Maintenance</option>
+                            <option value="weightGain">Weight Gain</option>
+                            <option value="muscleGain">Muscle Gain</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Macro Split</label>
+                        <select id="macroSplit_${member.id}">
+                            <option value="balanced" selected>Balanced (30/40/30)</option>
+                            <option value="highProtein">High Protein (40/30/30)</option>
+                            <option value="lowCarb">Low Carb (35/25/40)</option>
+                            <option value="lowFat">Low Fat (30/50/20)</option>
+                        </select>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load preferences step
+        function loadPreferencesStep() {
+            const container = document.getElementById('memberPreferencesContainer');
+            container.innerHTML = tempFamilyMembers.map(member => `
+                <div class="member-preferences-card">
+                    <h3>${member.name}</h3>
+                    
+                    <div class="form-group">
+                        <label>Dietary Preferences</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="veg_${member.id}" value="vegetarian"> Vegetarian</label>
+                            <label><input type="checkbox" id="vegan_${member.id}" value="vegan"> Vegan</label>
+                            <label><input type="checkbox" id="gf_${member.id}" value="gluten-free"> Gluten-Free</label>
+                            <label><input type="checkbox" id="df_${member.id}" value="dairy-free"> Dairy-Free</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Allergens (comma-separated)</label>
+                        <input type="text" id="allergens_${member.id}" placeholder="e.g., peanuts, shellfish">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Cuisine Preferences</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" value="American"> American</label>
+                            <label><input type="checkbox" value="Asian"> Asian</label>
+                            <label><input type="checkbox" value="Indian"> Indian</label>
+                            <label><input type="checkbox" value="Italian"> Italian</label>
+                            <label><input type="checkbox" value="Mexican"> Mexican</label>
+                            <label><input type="checkbox" value="Mediterranean"> Mediterranean</label>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load summary step
+        function loadSummaryStep() {
+            // Collect all data and calculate macros
+            tempFamilyMembers.forEach(member => {
+                const weight = parseFloat(document.getElementById(`weight_${member.id}`).value);
+                const height = parseFloat(document.getElementById(`height_${member.id}`).value);
+                const activityLevel = document.getElementById(`activity_${member.id}`).value;
+                const goal = document.getElementById(`goal_${member.id}`).value;
+                const macroSplit = document.getElementById(`macroSplit_${member.id}`).value;
+                
+                member.weight = weight;
+                member.height = height;
+                member.activityLevel = activityLevel;
+                member.goal = goal;
+                member.macroSplit = macroSplit;
+                
+                // Calculate macros
+                if (member.isChild) {
+                    member.macros = macroCalculator.calculateChildMacros(member.age, member.weight, member.activityLevel);
+                } else {
+                    member.macros = macroCalculator.calculateMemberMacros(member);
+                }
+                
+                // Dietary preferences
+                const dietaryPreferences = [];
+                if (document.getElementById(`veg_${member.id}`)?.checked) dietaryPreferences.push('vegetarian');
+                if (document.getElementById(`vegan_${member.id}`)?.checked) dietaryPreferences.push('vegan');
+                if (document.getElementById(`gf_${member.id}`)?.checked) dietaryPreferences.push('gluten-free');
+                if (document.getElementById(`df_${member.id}`)?.checked) dietaryPreferences.push('dairy-free');
+                
+                member.dietaryPreferences = dietaryPreferences;
+                
+                const allergensInput = document.getElementById(`allergens_${member.id}`)?.value;
+                member.allergens = allergensInput ? allergensInput.split(',').map(a => a.trim()) : [];
+                
+                // Cuisine preferences
+                const cuisineCheckboxes = document.querySelectorAll(`#memberPreferencesContainer .member-preferences-card:nth-child(${tempFamilyMembers.indexOf(member) + 1}) input[type="checkbox"][value]`);
+                member.cuisinePreferences = Array.from(cuisineCheckboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value);
+            });
+            
+            // Render summary
+            const container = document.getElementById('summaryContainer');
+            container.innerHTML = `
+                <div class="summary-card">
+                    <h3>Household</h3>
+                    <p>${storage.getHousehold().name}</p>
+                </div>
+                
+                ${tempFamilyMembers.map(member => `
+                    <div class="summary-member-card">
+                        <h3>${member.name}</h3>
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <span class="summary-label">Age</span>
+                                <span class="summary-value">${member.age}</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Goal</span>
+                                <span class="summary-value">${member.goal.replace(/([A-Z])/g, ' $1').trim()}</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Daily Calories</span>
+                                <span class="summary-value">${member.macros.calories}</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Protein</span>
+                                <span class="summary-value">${member.macros.protein}g</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Carbs</span>
+                                <span class="summary-value">${member.macros.carbs}g</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Fat</span>
+                                <span class="summary-value">${member.macros.fat}g</span>
+                            </div>
+                        </div>
+                        ${member.dietaryPreferences.length > 0 ? `
+                            <div class="summary-tags">
+                                ${member.dietaryPreferences.map(p => `<span class="tag">${p}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        // Finish onboarding
+        function finishOnboarding() {
+            // Save all family members
+            storage.saveFamilyMembers(tempFamilyMembers);
+            
+            // Redirect to app
+            window.location.href = 'app.html';
+        }
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>
+
