@@ -24,8 +24,8 @@
                 <a href="#features" class="nav-link">Features</a>
                 <a href="#family" class="nav-link">Family Plans</a>
                 <a href="#progress" class="nav-link">Progress</a>
-                <button class="nav-btn nav-login" onclick="showLoginModal()">Log In</button>
-                <button class="nav-cta" onclick="window.location.href='onboarding.html'">Sign Up</button>
+                <button class="nav-btn nav-login" onclick="goToLogin()">Log In</button>
+                <button class="nav-cta" onclick="goToSignup()">Sign Up</button>
             </div>
         </div>
     </nav>
@@ -40,7 +40,7 @@
                     generating personalized meal plans, scheduling prep, and creating smart shopping lists. 
                     Transform your nutrition journey with intelligent planning that adapts to your lifestyle.
                 </p>
-                <button class="cta-button primary" onclick="window.location.href='onboarding.html'">Get Started Free</button>
+                <button class="cta-button primary" onclick="goToSignup()">Get Started Free</button>
                 <div class="hero-stats">
                     <span>10,000+ meals planned</span>
                     <span>★★★★★ 4.9/5 rating</span>
@@ -483,6 +483,27 @@
           });
         }
 
+        function goToSignup() {
+            // Fresh signup - no existing profiles shown
+            window.location.href = 'onboarding.html?mode=signup';
+        }
+
+        function goToLogin() {
+            // Check if there are saved profiles
+            const profilesData = localStorage.getItem('mealflow_family_profiles');
+            if (profilesData) {
+                const profiles = JSON.parse(profilesData);
+                if (Object.keys(profiles).length > 0) {
+                    // Has saved profiles - go to onboarding with login mode
+                    window.location.href = 'onboarding.html?mode=login';
+                    return;
+                }
+            }
+            // No profiles - show message or go to signup
+            alert('No saved profiles found. Please sign up to create a new account.');
+            goToSignup();
+        }
+
         function showLoginModal() {
             document.getElementById('loginModal').style.display = 'flex';
         }
@@ -493,10 +514,9 @@
 
         function handleLogin(event) {
             event.preventDefault();
-            // For now, just redirect to app
-            // In future, this would authenticate with a backend
-            alert('Login functionality coming soon! For now, click "Sign Up" to get started.');
+            // For now, just redirect to login flow
             closeLoginModal();
+            goToLogin();
         }
 
         // Close modal on outside click

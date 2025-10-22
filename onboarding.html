@@ -24,8 +24,8 @@
         <!-- Step 1: Household -->
         <div class="onboarding-step active" id="step1">
             <div class="step-content">
-                <h1>Welcome to MealFlow!</h1>
-                <p class="step-description">Let's set up your household meal planning</p>
+                <h1 id="welcomeTitle">Welcome to MealFlow!</h1>
+                <p class="step-description" id="welcomeDescription">Let's set up your household meal planning</p>
                 
                 <div class="load-profile-section" id="loadProfileSection">
                     <h3>📂 Load Saved Profile</h3>
@@ -608,15 +608,45 @@
 
         // Load available profiles on step 1
         function loadAvailableProfiles() {
+            // Check URL parameter - only show profiles in login mode
+            const urlParams = new URLSearchParams(window.location.search);
+            const mode = urlParams.get('mode');
+            
+            const loadProfileSection = document.getElementById('loadProfileSection');
+            const divider = document.querySelector('.divider');
+            const welcomeTitle = document.getElementById('welcomeTitle');
+            const welcomeDescription = document.getElementById('welcomeDescription');
+            
+            // Update welcome message based on mode
+            if (mode === 'signup') {
+                if (welcomeTitle) welcomeTitle.textContent = 'Create Your Account';
+                if (welcomeDescription) welcomeDescription.textContent = 'Set up your new household meal planning';
+            } else if (mode === 'login') {
+                if (welcomeTitle) welcomeTitle.textContent = 'Welcome Back!';
+                if (welcomeDescription) welcomeDescription.textContent = 'Load your saved profile or create a new one';
+            }
+            
+            // If mode is 'signup' (fresh signup), hide the load profile section
+            if (mode === 'signup') {
+                if (loadProfileSection) loadProfileSection.style.display = 'none';
+                if (divider) divider.style.display = 'none';
+                return;
+            }
+            
+            // If mode is 'login' or no mode specified, show profiles if they exist
             const profiles = storage.getFamilyProfiles();
             const container = document.getElementById('availableProfiles');
             
             if (Object.keys(profiles).length === 0) {
-                document.getElementById('loadProfileSection').style.display = 'none';
+                if (loadProfileSection) loadProfileSection.style.display = 'none';
+                if (divider) divider.style.display = 'none';
                 return;
             }
             
-            document.getElementById('loadProfileSection').style.display = 'block';
+            // Show the profile section
+            if (loadProfileSection) loadProfileSection.style.display = 'block';
+            if (divider) divider.style.display = 'block';
+            
             container.innerHTML = Object.entries(profiles).map(([name, profile]) => `
                 <button class="profile-load-btn" onclick="loadProfile('${name}')">
                     <span class="profile-name">${name}</span>
