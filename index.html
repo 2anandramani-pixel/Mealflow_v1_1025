@@ -465,10 +465,17 @@
                         <label for="loginPassword">Password</label>
                         <input type="password" id="loginPassword" placeholder="••••••••" required>
                     </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                        <label style="display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: #64748b; cursor: pointer;">
+                            <input type="checkbox" id="rememberMe">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" style="color: #3b82f6; text-decoration: none; font-size: 0.9rem;">Forgot password?</a>
+                    </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Log In</button>
                     <p style="text-align: center; margin-top: 15px; color: #64748b;">
                         Don't have an account? 
-                        <a href="onboarding.html" style="color: #3b82f6; text-decoration: none; font-weight: 600;">Sign up free</a>
+                        <a href="javascript:void(0)" onclick="closeLoginModal(); goToSignup();" style="color: #3b82f6; text-decoration: none; font-weight: 600;">Sign up free</a>
                     </p>
                 </form>
             </div>
@@ -489,19 +496,8 @@
         }
 
         function goToLogin() {
-            // Check if there are saved profiles
-            const profilesData = localStorage.getItem('mealflow_family_profiles');
-            if (profilesData) {
-                const profiles = JSON.parse(profilesData);
-                if (Object.keys(profiles).length > 0) {
-                    // Has saved profiles - go to onboarding with login mode
-                    window.location.href = 'onboarding.html?mode=login';
-                    return;
-                }
-            }
-            // No profiles - show message or go to signup
-            alert('No saved profiles found. Please sign up to create a new account.');
-            goToSignup();
+            // Show the login modal
+            showLoginModal();
         }
 
         function showLoginModal() {
@@ -510,13 +506,59 @@
 
         function closeLoginModal() {
             document.getElementById('loginModal').style.display = 'none';
+            // Clear form
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
         }
 
         function handleLogin(event) {
             event.preventDefault();
-            // For now, just redirect to login flow
-            closeLoginModal();
-            goToLogin();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Get stored account
+            const accountData = localStorage.getItem('mealflow_account');
+            
+            if (!accountData) {
+                // No account exists
+                alert('No account found with this email. Please sign up first.');
+                return;
+            }
+            
+            const account = JSON.parse(accountData);
+            
+            // For now, just check if email matches (no password encryption yet)
+            // In production, this would call a backend API
+            if (account.email === email) {
+                // Check if they have saved profiles
+                const profilesData = localStorage.getItem('mealflow_family_profiles');
+                if (profilesData) {
+                    const profiles = JSON.parse(profilesData);
+                    if (Object.keys(profiles).length > 0) {
+                        // Has saved profiles - go to profile selection
+                        closeLoginModal();
+                        window.location.href = 'onboarding.html?mode=login';
+                        return;
+                    }
+                }
+                
+                // Has account but no profiles - check if has household
+                const household = localStorage.getItem('mealflow_household');
+                if (household) {
+                    // Go directly to app
+                    closeLoginModal();
+                    window.location.href = 'app.html';
+                } else {
+                    // New account, needs to complete setup
+                    closeLoginModal();
+                    alert('Welcome back! Please complete your household setup.');
+                    window.location.href = 'onboarding.html?mode=login';
+                }
+            } else {
+                // Email doesn't match
+                alert('Invalid email or password. Please try again.');
+            }
         }
 
         // Close modal on outside click
