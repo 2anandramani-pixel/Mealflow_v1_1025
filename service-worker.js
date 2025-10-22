@@ -1,19 +1,20 @@
 const CACHE_NAME = 'mealflow-cache-v1';
 const URLS_TO_CACHE = [
-  '/index.html',
-  '/onboarding.html',
-  '/app.html',
-  '/styles.css',
-  '/app.css',
-  '/script.js',
-  '/storage.js',
-  '/macros.js',
-  '/recipes.js',
-  '/meal-planner.js',
-  '/shopping.js',
-  '/manifest.json',
-  '/icons/icon-192.svg',
-  '/icons/icon-512.svg'
+  './index.html',
+  './onboarding.html',
+  './app.html',
+  './styles.css',
+  './app.css',
+  './script.js',
+  './storage.js',
+  './macros.js',
+  './recipes.js',
+  './meal-planner.js',
+  './shopping.js',
+  './app.js',
+  './manifest.json',
+  './icons/icon-192.svg',
+  './icons/icon-512.svg'
 ];
 
 self.addEventListener('install', (event) => {

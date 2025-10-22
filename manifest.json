@@ -2,7 +2,7 @@
   "name": "MealFlow - Meal Planner",
   "short_name": "MealFlow",
   "description": "Plan meals, track macros, and generate smart shopping lists for your family",
-  "start_url": "/app.html",
+  "start_url": "./app.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3b82f6",
