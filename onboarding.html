@@ -135,6 +135,9 @@
                         <button class="btn btn-secondary" onclick="saveCurrentProfile()">Save Profile</button>
                     </div>
                     <div id="savedProfiles"></div>
+                    <small style="color: #64748b; margin-top: 10px; display: block;">
+                        💡 Profiles are saved to your browser's local storage
+                    </small>
                 </div>
                 
                 <div class="button-group">
@@ -535,31 +538,63 @@
                 return;
             }
             
-            const household = storage.getHousehold();
-            storage.saveFamilyProfile(profileName, household, tempFamilyMembers);
+            if (tempFamilyMembers.length === 0) {
+                alert('No family members to save. Please complete the onboarding first.');
+                return;
+            }
             
-            alert(`Profile "${profileName}" saved successfully!`);
-            document.getElementById('profileName').value = '';
-            loadSavedProfilesList();
+            // Get or create household data
+            let household = storage.getHousehold();
+            if (!household) {
+                household = {
+                    name: document.getElementById('householdName')?.value || 'My Family',
+                    createdAt: new Date().toISOString()
+                };
+            }
+            
+            // Save the profile
+            const saved = storage.saveFamilyProfile(profileName, household, tempFamilyMembers);
+            
+            if (saved) {
+                alert(`✅ Profile "${profileName}" saved successfully!\n\nYou can now load it from Step 1.`);
+                document.getElementById('profileName').value = '';
+                loadSavedProfilesList();
+                loadAvailableProfiles(); // Refresh the load list too
+            } else {
+                alert('❌ Error saving profile. Please try again.');
+            }
         }
 
         // Load saved profiles list
         function loadSavedProfilesList() {
-            const profiles = storage.getFamilyProfiles();
-            const container = document.getElementById('savedProfiles');
-            
-            if (Object.keys(profiles).length === 0) {
-                container.innerHTML = '<p class="empty-state" style="font-size: 0.9rem;">No saved profiles yet</p>';
-                return;
+            try {
+                const profiles = storage.getFamilyProfiles();
+                const container = document.getElementById('savedProfiles');
+                
+                console.log('Loading profiles:', profiles);
+                
+                if (!container) {
+                    console.error('savedProfiles container not found');
+                    return;
+                }
+                
+                if (Object.keys(profiles).length === 0) {
+                    container.innerHTML = '<p class="empty-state" style="font-size: 0.9rem; margin-top: 10px;">No saved profiles yet</p>';
+                    return;
+                }
+                
+                container.innerHTML = '<h4 style="margin-top: 15px;">Saved Profiles:</h4>' + Object.entries(profiles).map(([name, profile]) => `
+                    <div class="saved-profile-item">
+                        <div>
+                            <span>${name}</span>
+                            <small>${profile.members.length} members • Saved ${new Date(profile.savedAt).toLocaleDateString()}</small>
+                        </div>
+                        <button class="btn btn-sm btn-danger" onclick="deleteProfile('${name}')">Delete</button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading profiles:', error);
             }
-            
-            container.innerHTML = '<h4>Saved Profiles:</h4>' + Object.entries(profiles).map(([name, profile]) => `
-                <div class="saved-profile-item">
-                    <span>${name}</span>
-                    <small>${profile.members.length} members • Saved ${new Date(profile.savedAt).toLocaleDateString()}</small>
-                    <button class="btn btn-sm btn-danger" onclick="deleteProfile('${name}')">Delete</button>
-                </div>
-            `).join('');
         }
 
         // Delete profile

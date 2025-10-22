@@ -173,9 +173,14 @@
     border: 1px solid #e2e8f0;
 }
 
+.saved-profile-item > div {
+    flex: 1;
+}
+
 .saved-profile-item span {
     font-weight: 600;
     color: #1e293b;
+    display: block;
 }
 
 .saved-profile-item small {
@@ -183,6 +188,7 @@
     font-size: 0.85rem;
     display: block;
     margin-top: 3px;
+    font-weight: 400;
 }
 
 .profile-load-btn {
