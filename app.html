@@ -35,8 +35,39 @@
                     <span class="nav-label">Shopping</span>
                 </a>
             </div>
+            <div class="app-nav-actions">
+                <button class="btn-icon" onclick="showUserMenu()" title="Account">
+                    <span class="nav-icon">👤</span>
+                </button>
+            </div>
         </div>
     </nav>
+
+    <!-- User Menu Dropdown -->
+    <div id="userMenu" class="user-menu">
+        <div class="user-menu-header">
+            <div class="user-name">Guest User</div>
+            <div class="user-email">Not signed in</div>
+        </div>
+        <div class="user-menu-items">
+            <button class="user-menu-item" onclick="goToProfile()">
+                <span>⚙️</span>
+                <span>Profile Settings</span>
+            </button>
+            <button class="user-menu-item" onclick="goToFamily()">
+                <span>👨‍👩‍👧‍👦</span>
+                <span>Manage Family</span>
+            </button>
+            <button class="user-menu-item" onclick="exportData()">
+                <span>💾</span>
+                <span>Export Data</span>
+            </button>
+            <button class="user-menu-item danger" onclick="confirmLogout()">
+                <span>🚪</span>
+                <span>Log Out</span>
+            </button>
+        </div>
+    </div>
 
     <!-- Main App Container -->
     <main class="app-main">
@@ -639,6 +670,61 @@
         function viewFamily() {
             showView('family');
         }
+
+        // User menu functions
+        function showUserMenu() {
+            const menu = document.getElementById('userMenu');
+            menu.classList.toggle('show');
+        }
+
+        function goToProfile() {
+            alert('Profile settings coming soon!');
+            showUserMenu(); // Close menu
+        }
+
+        function goToFamily() {
+            showUserMenu(); // Close menu
+            viewFamily();
+        }
+
+        function exportData() {
+            const household = storage.getHousehold();
+            const members = storage.getMembers();
+            const mealPlan = storage.getCurrentMealPlan();
+            
+            const data = {
+                household,
+                members,
+                mealPlan,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'mealflow-data-export.json';
+            a.click();
+            
+            showUserMenu(); // Close menu
+        }
+
+        function confirmLogout() {
+            if (confirm('Are you sure you want to log out? Your data is saved locally and will be available when you return.')) {
+                showUserMenu(); // Close menu
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Close user menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('userMenu');
+            const button = event.target.closest('.btn-icon');
+            
+            if (!menu.contains(event.target) && !button) {
+                menu.classList.remove('show');
+            }
+        });
     </script>
 </body>
 </html>

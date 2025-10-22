@@ -430,6 +430,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 20px;
 }
 
 .app-logo h2 {
@@ -471,6 +472,100 @@
 .nav-label {
     font-size: 0.85rem;
     font-weight: 500;
+}
+
+.app-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-icon {
+    background: transparent;
+    border: 2px solid #e2e8f0;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.btn-icon:hover {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.btn-icon .nav-icon {
+    font-size: 1.3rem;
+}
+
+/* User Menu Dropdown */
+.user-menu {
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    min-width: 200px;
+    display: none;
+    animation: fadeInDown 0.3s ease;
+    z-index: 1000;
+}
+
+.user-menu.show {
+    display: block;
+}
+
+.user-menu-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.user-menu-header .user-name {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.95rem;
+}
+
+.user-menu-header .user-email {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.user-menu-items {
+    padding: 10px 0;
+}
+
+.user-menu-item {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    color: #475569;
+    font-size: 0.95rem;
+}
+
+.user-menu-item:hover {
+    background: #f8fafc;
+}
+
+.user-menu-item.danger {
+    color: #ef4444;
+}
+
+.user-menu-item.danger:hover {
+    background: #fef2f2;
 }
 
 .app-main {
